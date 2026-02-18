@@ -1,4 +1,4 @@
-my <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -24,11 +24,14 @@ my <!DOCTYPE html>
 
     <!-- Waiting state -->
     <div id="waitingState">
-      <div class="auth-icon" id="pairIcon">🔗</div>
+      <div class="auth-icon">🔗</div>
       <h2>Your pairing code</h2>
       <p class="auth-sub">
-        Share your code <em>or</em> invite link with your partner so they can join you on OurApp.
+        Share your code <em>or</em> invite link with your partner so they can join you — from any device!
       </p>
+
+      <!-- Firebase status badge -->
+      <div id="dbStatus" style="display:none;margin-bottom:16px;padding:8px 14px;border-radius:100px;font-size:.8rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;"></div>
 
       <!-- Animated code display -->
       <div id="codeDisplay" class="code-display" aria-label="Pairing code"></div>
@@ -39,18 +42,20 @@ my <!DOCTYPE html>
         <button id="regenBtn" class="btn btn-sm" style="background:var(--grad-soft);color:var(--purple);border:1px solid var(--border);">🔄 New Code</button>
       </div>
 
-      <!-- Invite link area -->
+      <!-- Invite link (the primary sharing method) -->
       <div style="background:var(--cream);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px;">
-        <div style="font-size:.8rem;font-weight:700;color:var(--purple);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">✨ Better: Share your invite link</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--purple);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">✨ Recommended: Share your invite link</div>
         <div style="display:flex;gap:8px;align-items:center;">
-          <input id="inviteLinkInput" readonly style="flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:.8rem;color:var(--mid);background:var(--white);font-family:monospace;overflow:hidden;text-overflow:ellipsis;" />
+          <input id="inviteLinkInput" readonly style="flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:.75rem;color:var(--mid);background:var(--white);font-family:monospace;overflow:hidden;text-overflow:ellipsis;" />
           <button id="copyLinkBtn" class="btn btn-primary btn-sm" style="white-space:nowrap;flex-shrink:0;">📤 Copy Link</button>
         </div>
-        <p style="font-size:.75rem;color:var(--muted);margin-top:8px;line-height:1.5;">Your partner opens this link — their code is pre-filled automatically. Works even if they're on a different device! 🌐</p>
+        <p style="font-size:.75rem;color:var(--muted);margin-top:8px;line-height:1.5;">
+          Your partner opens this link → code is pre-filled → they just add their name and join. Works cross-device! 🌐
+        </p>
       </div>
 
       <!-- Waiting indicator -->
-      <div style="text-align:center;margin-bottom:24px;" id="waitingArea">
+      <div style="text-align:center;margin-bottom:24px;">
         <div style="display:inline-flex;align-items:center;gap:10px;background:var(--grad-soft);border:1px solid var(--border);border-radius:100px;padding:10px 20px;font-size:.9rem;color:var(--purple);font-weight:600;">
           <span class="dot" style="background:var(--purple)"></span>
           Waiting for your partner to join…
@@ -60,12 +65,9 @@ my <!DOCTYPE html>
 
       <div class="auth-divider"><span>Partner already has their own code?</span></div>
 
-      <!-- Join instead -->
       <div style="text-align:center;">
         <p style="font-size:.9rem;color:var(--mid);margin-bottom:12px;">If your partner already has <em>their</em> code, enter it here instead:</p>
-        <a href="join.html" class="btn btn-primary btn-block">
-          💜 Enter My Partner's Code
-        </a>
+        <a href="join.html" class="btn btn-primary btn-block">💜 Enter My Partner's Code</a>
       </div>
     </div>
 
@@ -84,14 +86,39 @@ my <!DOCTYPE html>
 </main>
 
 <div id="toast" class="toast"></div>
+
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<!-- OurApp scripts -->
+<script src="firebase-config.js"></script>
 <script src="app.js"></script>
+<script src="firebase-db.js"></script>
+
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     if (!App.requireUser()) return;
     if (App.isPaired()) { window.location.href = 'dashboard.html'; return; }
 
     const user = App.getUser();
     document.querySelectorAll('.user-name').forEach(el => el.textContent = user.name);
+
+    // Show Firebase status badge
+    const badge = document.getElementById('dbStatus');
+    if (DB.isReady()) {
+      badge.innerHTML = '🟢 Connected to cloud — pairing works across devices!';
+      badge.style.background = 'rgba(123,79,233,.08)';
+      badge.style.color = 'var(--purple)';
+      badge.style.border = '1px solid rgba(123,79,233,.2)';
+      badge.style.display = 'inline-flex';
+    } else {
+      badge.innerHTML = '⚠️ No cloud DB configured — same-device only (see firebase-config.js)';
+      badge.style.background = 'rgba(255,107,138,.08)';
+      badge.style.color = '#b00030';
+      badge.style.border = '1px solid rgba(255,107,138,.3)';
+      badge.style.display = 'inline-flex';
+    }
 
     // Generate / retrieve pair code
     let pairData = App.getPair();
@@ -99,79 +126,72 @@ my <!DOCTYPE html>
       const code = App.generateCode();
       pairData = { code, createdAt: Date.now() };
       App.save(App.KEYS.PAIR, pairData);
-      App.registerCode(pairData.code, user);
+      await DB.registerCode(code, user);
+    } else {
+      // Re-register in case Firebase lost it (e.g. page refresh)
+      await DB.registerCode(pairData.code, user);
     }
 
     displayCode(pairData.code);
     updateInviteLink(pairData.code, user);
 
-    // ─── Copy code button ──────────────────────────────────────────────────
+    // ─── Copy code ──────────────────────────────────────────────────────────
     document.getElementById('copyCodeBtn').addEventListener('click', () => {
       navigator.clipboard.writeText(pairData.code).then(() => {
         App.toast('Code copied! Share it with your partner 📋', '📋');
-      }).catch(() => {
-        App.toast('Your code: ' + pairData.code, '🔑');
-      });
+      }).catch(() => App.toast('Your code: ' + pairData.code, '🔑'));
     });
 
-    // ─── Copy invite link button ──────────────────────────────────────────
+    // ─── Copy invite link ────────────────────────────────────────────────────
     document.getElementById('copyLinkBtn').addEventListener('click', () => {
       const link = document.getElementById('inviteLinkInput').value;
       navigator.clipboard.writeText(link).then(() => {
         App.toast('Invite link copied! Send it to your partner 🎉', '🔗');
-      }).catch(() => {
-        App.toast('Copy the link from the text box!', '🔗');
-      });
+      }).catch(() => App.toast('Copy the link from the text box!', '🔗'));
     });
 
-    // ─── Regen code button ────────────────────────────────────────────────
-    document.getElementById('regenBtn').addEventListener('click', () => {
-      App.removeCode(pairData.code);
+    // ─── Regen code ──────────────────────────────────────────────────────────
+    document.getElementById('regenBtn').addEventListener('click', async () => {
+      await DB.removeCode(pairData.code);
       const code = App.generateCode();
       pairData = { code, createdAt: Date.now() };
       App.save(App.KEYS.PAIR, pairData);
-      App.registerCode(code, user);
+      await DB.registerCode(code, user);
       displayCode(code);
       updateInviteLink(code, user);
-      App.toast('New code generated! Share the new link 🔄', '🔄');
+      App.toast('New code generated! 🔄', '🔄');
     });
 
-    // ─── BroadcastChannel: detect partner joining from same browser ────────
+    // ─── Real-time listener (Firebase) / polling fallback ───────────────────
+    const unsubscribe = DB.onPartnerJoined(pairData.code, (partner) => {
+      unsubscribe();
+      App.save(App.KEYS.PARTNER, partner);
+      App.save(App.KEYS.JOINED, Date.now());
+      handlePaired(partner);
+    });
+
+    // ─── BroadcastChannel: same-browser tab detection ────────────────────────
     try {
       const bc = new BroadcastChannel('ourapp_pair');
       bc.onmessage = (evt) => {
-        if (evt.data && evt.data.type === 'PAIRED' && evt.data.code === pairData.code) {
+        if (evt.data?.type === 'PAIRED' && evt.data.code === pairData.code) {
           handlePaired(evt.data.partner);
         }
       };
-    } catch(e) { /* not supported */ }
-
-    // ─── Poll localStorage for partner joining (cross-tab same browser) ───
-    const pollInterval = setInterval(() => {
-      const reg   = App.getCodeRegistry();
-      const entry = reg[pairData.code];
-      if (entry && entry.partner) {
-        clearInterval(pollInterval);
-        // Save partner to our localStorage
-        App.save(App.KEYS.PARTNER, entry.partner);
-        App.save(App.KEYS.JOINED, Date.now());
-        handlePaired(entry.partner);
-      }
-    }, 2000);
+    } catch(e) { /* not supported in all browsers */ }
 
     function handlePaired(partner) {
-      // Save if not already saved
       if (!App.getPartner()) {
         App.save(App.KEYS.PARTNER, partner);
         App.save(App.KEYS.JOINED, Date.now());
       }
       document.getElementById('waitingState').style.display = 'none';
-      document.getElementById('pairedState').style.display = 'block';
-      document.getElementById('pairedNameMsg').textContent = `${partner.name} just joined! Welcome, ${user.name} & ${partner.name}! 💜`;
-      setTimeout(() => {
-        document.getElementById('pairProgressBar').style.width = '100%';
-      }, 100);
-      setTimeout(() => { window.location.href = 'dashboard.html'; }, 2200);
+      const ps = document.getElementById('pairedState');
+      ps.style.display = 'block';
+      document.getElementById('pairedNameMsg').textContent =
+        `${partner.name} just joined! Welcome, ${user.name} & ${partner.name}! 💜`;
+      setTimeout(() => document.getElementById('pairProgressBar').style.width = '100%', 100);
+      setTimeout(() => window.location.href = 'dashboard.html', 2200);
     }
   });
 
@@ -189,10 +209,9 @@ my <!DOCTYPE html>
   }
 
   function updateInviteLink(code, user) {
-    // Build invite link with host data encoded in base64
     const hostData = { ...user, pairCode: code };
-    const b64      = btoa(JSON.stringify(hostData));
-    const base     = window.location.origin + window.location.pathname.replace(/pair(\.html)?$/, 'join');
+    const b64      = btoa(unescape(encodeURIComponent(JSON.stringify(hostData))));
+    const base     = window.location.origin + window.location.pathname.replace(/pair(\.html)?(\?.*)?$/, 'join');
     const link     = `${base}?invite=${b64}`;
     const input    = document.getElementById('inviteLinkInput');
     if (input) input.value = link;
