@@ -12,67 +12,107 @@
 <!-- NAV -->
 <nav class="auth-nav">
   <a href="index.html" class="nav-logo">OurApp 💜</a>
-  <div style="display:flex;gap:10px;align-items:center;">
-    <span style="font-size:.875rem;color:var(--muted)">Hi, <strong class="user-name" style="color:var(--dark)"></strong> 👋</span>
-    <a href="pair.html" class="btn btn-outline btn-sm">← My Code</a>
-  </div>
+  <a href="index.html" class="btn btn-outline btn-sm">← Back Home</a>
 </nav>
 
 <!-- MAIN -->
 <main class="auth-main">
-  <div class="auth-card" style="max-width:480px;">
+  <div class="auth-card" style="max-width:500px;">
 
-    <div class="auth-icon">💜</div>
-    <h2>Enter your partner's code</h2>
-    <p class="auth-sub">
-      Ask your partner to open OurApp and share their 6-character pairing code with you. Enter it below to connect!
-    </p>
-
-    <!-- Alert messages -->
-    <div id="joinError"   class="alert alert-error"   style="display:none;"></div>
-    <div id="joinSuccess" class="alert alert-success" style="display:none;"></div>
-
-    <!-- 6-box code input -->
-    <div class="code-input" id="codeInputArea" aria-label="Enter 6-character pairing code">
-      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 1" />
-      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 2" />
-      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 3" />
-      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 4" />
-      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 5" />
-      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 6" />
-    </div>
-
-    <p style="text-align:center;font-size:.8rem;color:var(--muted);margin-bottom:20px;">
-      Tip: You can also paste the full code at once 📋
-    </p>
-
-    <button id="joinBtn" class="btn btn-primary btn-block btn-lg">
-      💜 Connect with My Partner
-    </button>
-
-    <div class="auth-divider"><span>Don't have a code?</span></div>
-
-    <div style="text-align:center;">
-      <p style="font-size:.9rem;color:var(--mid);margin-bottom:12px;">
-        If your partner hasn't signed up yet, you can both start fresh — share your own code with them instead.
+    <!-- Step 1: Enter code (shown when no invite link) -->
+    <div id="step1">
+      <div class="auth-icon">💜</div>
+      <h2>Join your partner</h2>
+      <p class="auth-sub" id="step1Sub">
+        Enter your partner's 6-character code below to pair up!
       </p>
-      <a href="pair.html" class="btn btn-outline btn-block">
-        🔗 Share My Code Instead
-      </a>
-    </div>
 
-    <!-- Help section -->
-    <div style="margin-top:28px;padding:20px;background:var(--cream);border:1px solid var(--border);border-radius:14px;">
-      <p style="font-size:.875rem;font-weight:700;color:var(--dark);margin-bottom:10px;">❓ Where do I find the code?</p>
-      <p style="font-size:.85rem;color:var(--mid);line-height:1.65;">
-        Ask your partner to open OurApp → sign up → they'll see a 6-character code on their <strong>Pairing Code</strong> page. It looks like: <span style="font-family:'Playfair Display',serif;font-weight:800;color:var(--purple);letter-spacing:4px;">A3BK7P</span>
+      <!-- Invite preview (shown when arriving via link) -->
+      <div id="invitePreview" style="display:none;margin-bottom:20px;padding:16px;background:var(--grad-soft);border-radius:14px;border:1px solid var(--border);text-align:center;">
+        <div id="inviteAvatar" style="font-size:3rem;margin-bottom:6px;"></div>
+        <div style="font-weight:700;font-size:1.1rem;color:var(--dark);" id="inviteHostName"></div>
+        <div style="font-size:.85rem;color:var(--muted);margin-top:4px;">wants to pair with you on OurApp 💜</div>
+      </div>
+
+      <!-- Alert messages -->
+      <div id="joinError"   class="alert alert-error"   style="display:none;"></div>
+      <div id="joinSuccess" class="alert alert-success" style="display:none;"></div>
+
+      <!-- 6-box code input -->
+      <div class="code-input" id="codeInputArea" aria-label="Enter 6-character pairing code">
+        <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 1" />
+        <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 2" />
+        <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 3" />
+        <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 4" />
+        <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 5" />
+        <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 6" />
+      </div>
+
+      <p style="text-align:center;font-size:.8rem;color:var(--muted);margin-bottom:20px;">
+        Tip: You can also paste the full code at once 📋
       </p>
+
+      <button id="step1Btn" class="btn btn-primary btn-block btn-lg">
+        💜 Next — Create My Profile
+      </button>
+
+      <div class="auth-link" style="margin-top:16px;">
+        Already have an account? <a href="pair.html">← Go back to my code</a>
+      </div>
     </div>
 
-    <!-- Animation for success state (hidden by default) -->
-    <div id="successAnimation" style="display:none;text-align:center;margin-top:20px;">
+    <!-- Step 2: Create profile (shown after code verified) -->
+    <div id="step2" style="display:none;">
+      <div class="auth-icon" id="step2Icon">🌸</div>
+      <h2 id="step2Title">Almost there!</h2>
+      <p class="auth-sub" id="step2Sub">Create your profile to complete the pairing.</p>
+
+      <div id="step2Error" class="alert alert-error" style="display:none;"></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="joinName">Your first name</label>
+          <input type="text" id="joinName" placeholder="e.g. Jordan" maxlength="30" autocomplete="given-name" />
+        </div>
+        <div class="form-group">
+          <label for="joinEmoji">Your emoji</label>
+          <select id="joinEmoji">
+            <option value="🌊">🌊 Wave</option>
+            <option value="😊">😊 Happy</option>
+            <option value="🌸">🌸 Blossom</option>
+            <option value="🌙">🌙 Moon</option>
+            <option value="⭐">⭐ Star</option>
+            <option value="🦋">🦋 Butterfly</option>
+            <option value="🌺">🌺 Hibiscus</option>
+            <option value="🍀">🍀 Lucky</option>
+            <option value="🌈">🌈 Rainbow</option>
+            <option value="🔥">🔥 Fire</option>
+            <option value="💫">💫 Sparkle</option>
+            <option value="🎸">🎸 Guitar</option>
+            <option value="🌻">🌻 Sunflower</option>
+            <option value="🦁">🦁 Lion</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="step2Btn" class="btn btn-primary btn-block btn-lg">
+        💜 Pair Up!
+      </button>
+
+      <button id="backBtn" class="btn btn-outline btn-block" style="margin-top:10px;">
+        ← Change Code
+      </button>
+    </div>
+
+    <!-- Step 3: Success -->
+    <div id="step3" style="display:none;text-align:center;padding:20px 0;">
       <div style="font-size:4rem;animation:float 2s ease-in-out infinite;">💜</div>
-      <p style="font-weight:700;color:var(--purple);margin-top:8px;">You're paired! Heading to your dashboard…</p>
+      <h2 style="margin-top:16px;font-family:'Playfair Display',serif;">You're paired!</h2>
+      <p style="color:var(--mid);margin:10px 0 20px;font-size:.95rem;" id="pairedMsg"></p>
+      <div style="width:100%;height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:16px;">
+        <div id="progressBar" style="height:100%;background:var(--grad);width:0%;transition:width 1.5s ease;border-radius:2px;"></div>
+      </div>
+      <p style="font-size:.85rem;color:var(--muted);">Taking you to your dashboard…</p>
     </div>
 
   </div>
@@ -81,11 +121,176 @@
 <div id="toast" class="toast"></div>
 <script src="app.js"></script>
 <script>
+  // ─── Read URL params (from invite link) ───────────────────────────────────
+  const params    = new URLSearchParams(window.location.search);
+  const inviteB64 = params.get('invite');
+  let   hostData  = null;  // pre-loaded host data from URL
+  let   pendingCode = '';
+
+  if (inviteB64) {
+    try {
+      hostData = JSON.parse(atob(inviteB64));
+      // Pre-fill code boxes
+      pendingCode = (hostData.pairCode || '').toUpperCase();
+    } catch(e) { hostData = null; }
+  }
+
+  // ─── If already paired, go to dashboard ───────────────────────────────────
+  if (App.isPaired()) {
+    window.location.href = 'dashboard.html';
+  }
+
+  // ─── Show invite preview if arrived via link ──────────────────────────────
+  if (hostData) {
+    document.getElementById('invitePreview').style.display = 'block';
+    document.getElementById('inviteAvatar').textContent = hostData.emoji || '💜';
+    document.getElementById('inviteHostName').textContent = hostData.name || 'Your partner';
+    document.getElementById('step1Sub').textContent = `${hostData.name} shared a link with you — confirm their code and create your profile!`;
+
+    // Pre-fill code boxes
+    const inputs = document.querySelectorAll('.code-input input');
+    pendingCode.split('').forEach((ch, i) => { if (inputs[i]) inputs[i].value = ch; });
+  }
+
+  // ─── Code input wiring ────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    initJoin();
-    // Focus first input on load
-    document.querySelector('.code-input input')?.focus();
+    const inputs = document.querySelectorAll('.code-input input');
+
+    inputs.forEach((inp, idx) => {
+      inp.addEventListener('input', e => {
+        e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        if (e.target.value && idx < inputs.length - 1) inputs[idx + 1].focus();
+      });
+      inp.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !e.target.value && idx > 0) inputs[idx - 1].focus();
+      });
+      inp.addEventListener('paste', e => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+        text.split('').forEach((ch, i) => { if (inputs[i]) inputs[i].value = ch; });
+        if (text.length === 6) inputs[Math.min(5, text.length - 1)].focus();
+      });
+    });
+
+    // Focus first input
+    if (!hostData) inputs[0]?.focus();
+
+    // ─── Step 1 — Verify code ───────────────────────────────────────────────
+    document.getElementById('step1Btn').addEventListener('click', () => {
+      const code = getCode();
+      const err  = document.getElementById('joinError');
+      err.style.display = 'none';
+
+      if (code.length < 6) {
+        err.textContent = '❌ Please enter the full 6-character code.';
+        err.style.display = 'flex';
+        return;
+      }
+
+      // Try to look up from localStorage registry (same-browser flow)
+      let entry = App.lookupCode(code);
+
+      // If not found locally but we have host data from URL, use it directly
+      if (!entry && hostData && hostData.pairCode === code) {
+        // Register it temporarily so we can complete the pairing
+        App.registerCode(code, hostData);
+        entry = hostData;
+      }
+
+      if (!entry) {
+        err.textContent = '❌ Code not found. Double-check and try again, or ask your partner to share their invite link.';
+        err.style.display = 'flex';
+        return;
+      }
+
+      // Check if current user is trying to use their own code
+      const me = App.getUser();
+      if (me && entry.id === me.id) {
+        err.textContent = "😅 That's your own code! Share it with your partner.";
+        err.style.display = 'flex';
+        return;
+      }
+
+      // Code valid — move to step 2
+      document.getElementById('step1').style.display = 'none';
+      const step2 = document.getElementById('step2');
+      step2.style.display = 'block';
+      document.getElementById('step2Title').textContent = `Join ${entry.name}! 🎉`;
+      document.getElementById('step2Sub').textContent = `You're about to pair with ${entry.name}. Create your profile to complete the connection.`;
+      document.getElementById('joinName').focus();
+
+      // Keep entry for step 2
+      step2._entry = entry;
+      step2._code  = code;
+    });
+
+    // ─── Emoji live preview ─────────────────────────────────────────────────
+    const emojiSel = document.getElementById('joinEmoji');
+    const iconEl   = document.getElementById('step2Icon');
+    emojiSel.addEventListener('change', () => { iconEl.textContent = emojiSel.value; });
+
+    // ─── Back button ────────────────────────────────────────────────────────
+    document.getElementById('backBtn').addEventListener('click', () => {
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step1').style.display = 'block';
+    });
+
+    // ─── Step 2 — Create profile & pair ─────────────────────────────────────
+    document.getElementById('step2Btn').addEventListener('click', () => {
+      const step2   = document.getElementById('step2');
+      const entry   = step2._entry;
+      const code    = step2._code;
+      const name    = document.getElementById('joinName').value.trim();
+      const emoji   = document.getElementById('joinEmoji').value;
+      const err2    = document.getElementById('step2Error');
+
+      if (!name) {
+        err2.textContent = '❌ Please enter your first name.';
+        err2.style.display = 'flex';
+        return;
+      }
+
+      // Clear old session data, create new user
+      localStorage.removeItem(App.KEYS.PAIR);
+      localStorage.removeItem(App.KEYS.PARTNER);
+      localStorage.removeItem(App.KEYS.JOINED);
+      localStorage.removeItem(App.KEYS.ANSWERS);
+      localStorage.removeItem(App.KEYS.STREAK);
+
+      const me = { name, emoji, email: '', id: Date.now().toString(36) };
+      App.saveUser(me);
+
+      // Write partner info into registry (so the host can detect it via polling)
+      const reg = App.getCodeRegistry();
+      reg[code] = { ...(reg[code] || entry), partner: me };
+      App.save(App.KEYS.CODES, reg);
+
+      // Store partner locally
+      App.save(App.KEYS.PARTNER, entry);
+      App.save(App.KEYS.JOINED, Date.now());
+
+      // Broadcast to any open pair.html tab (same browser)
+      try {
+        const ch = new BroadcastChannel('ourapp_pair');
+        ch.postMessage({ type: 'PAIRED', partner: me, code });
+      } catch(e) { /* BroadcastChannel not supported */ }
+
+      // Show success
+      step2.style.display = 'none';
+      const step3 = document.getElementById('step3');
+      step3.style.display = 'block';
+      document.getElementById('pairedMsg').textContent = `You and ${entry.name} are now paired on OurApp! 🎉`;
+      setTimeout(() => {
+        document.getElementById('progressBar').style.width = '100%';
+      }, 100);
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+    });
   });
+
+  function getCode() {
+    return Array.from(document.querySelectorAll('.code-input input'))
+      .map(i => i.value).join('').toUpperCase();
+  }
 </script>
 </body>
 </html>

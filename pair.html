@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+my <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -20,64 +20,64 @@
 
 <!-- MAIN -->
 <main class="auth-main">
-  <div class="auth-card" style="max-width:500px;">
+  <div class="auth-card" style="max-width:520px;">
 
-    <div class="auth-icon" id="pairIcon">🔗</div>
-    <h2>Your pairing code</h2>
-    <p class="auth-sub">
-      Share this code with your partner so they can join you on OurApp. Waiting for them to connect…
-    </p>
+    <!-- Waiting state -->
+    <div id="waitingState">
+      <div class="auth-icon" id="pairIcon">🔗</div>
+      <h2>Your pairing code</h2>
+      <p class="auth-sub">
+        Share your code <em>or</em> invite link with your partner so they can join you on OurApp.
+      </p>
 
-    <!-- Animated code display -->
-    <div id="codeDisplay" class="code-display" aria-label="Pairing code"></div>
+      <!-- Animated code display -->
+      <div id="codeDisplay" class="code-display" aria-label="Pairing code"></div>
 
-    <!-- Copy / Share actions -->
-    <div class="code-actions">
-      <button id="copyBtn" class="btn btn-outline btn-sm">📋 Copy Code</button>
-      <button id="shareBtn" class="btn btn-outline btn-sm">📤 Share</button>
-      <button id="regenBtn" class="btn btn-sm" style="background:var(--grad-soft);color:var(--purple);border:1px solid var(--border);">🔄 New Code</button>
-    </div>
-
-    <!-- Waiting indicator -->
-    <div style="text-align:center;margin-bottom:24px;" id="waitingArea">
-      <div style="display:inline-flex;align-items:center;gap:10px;background:var(--grad-soft);border:1px solid var(--border);border-radius:100px;padding:10px 20px;font-size:.9rem;color:var(--purple);font-weight:600;">
-        <span class="dot" style="background:var(--purple)"></span>
-        Waiting for your partner to join…
+      <!-- Copy code + regen -->
+      <div class="code-actions" style="margin-bottom:8px;">
+        <button id="copyCodeBtn" class="btn btn-outline btn-sm">📋 Copy Code</button>
+        <button id="regenBtn" class="btn btn-sm" style="background:var(--grad-soft);color:var(--purple);border:1px solid var(--border);">🔄 New Code</button>
       </div>
-      <p style="font-size:.8rem;color:var(--muted);margin-top:12px;">This page will automatically update when they connect 🎉</p>
-    </div>
 
-    <div class="auth-divider"><span>Partner already has a code?</span></div>
-
-    <!-- Join instead -->
-    <div style="text-align:center;">
-      <p style="font-size:.9rem;color:var(--mid);margin-bottom:12px;">If your partner already shared <em>their</em> code with you, enter it here instead:</p>
-      <a href="join.html" class="btn btn-primary btn-block">
-        💜 Enter My Partner's Code
-      </a>
-    </div>
-
-    <!-- Steps hint -->
-    <div style="margin-top:28px;padding:20px;background:var(--cream);border:1px solid var(--border);border-radius:14px;">
-      <p style="font-size:.85rem;font-weight:700;color:var(--dark);margin-bottom:12px;">How to pair:</p>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--mid);">
-          <span style="width:22px;height:22px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:800;flex-shrink:0;">1</span>
-          Copy or screenshot your code above
+      <!-- Invite link area -->
+      <div style="background:var(--cream);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px;">
+        <div style="font-size:.8rem;font-weight:700;color:var(--purple);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">✨ Better: Share your invite link</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input id="inviteLinkInput" readonly style="flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:.8rem;color:var(--mid);background:var(--white);font-family:monospace;overflow:hidden;text-overflow:ellipsis;" />
+          <button id="copyLinkBtn" class="btn btn-primary btn-sm" style="white-space:nowrap;flex-shrink:0;">📤 Copy Link</button>
         </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--mid);">
-          <span style="width:22px;height:22px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:800;flex-shrink:0;">2</span>
-          Send it to your partner via message or any app
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--mid);">
-          <span style="width:22px;height:22px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:800;flex-shrink:0;">3</span>
-          They sign up on OurApp and enter your code on the Join page
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--mid);">
-          <span style="width:22px;height:22px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:800;flex-shrink:0;">4</span>
-          This page updates automatically — you're paired! 💜
-        </div>
+        <p style="font-size:.75rem;color:var(--muted);margin-top:8px;line-height:1.5;">Your partner opens this link — their code is pre-filled automatically. Works even if they're on a different device! 🌐</p>
       </div>
+
+      <!-- Waiting indicator -->
+      <div style="text-align:center;margin-bottom:24px;" id="waitingArea">
+        <div style="display:inline-flex;align-items:center;gap:10px;background:var(--grad-soft);border:1px solid var(--border);border-radius:100px;padding:10px 20px;font-size:.9rem;color:var(--purple);font-weight:600;">
+          <span class="dot" style="background:var(--purple)"></span>
+          Waiting for your partner to join…
+        </div>
+        <p style="font-size:.8rem;color:var(--muted);margin-top:12px;">This page updates automatically when they connect 🎉</p>
+      </div>
+
+      <div class="auth-divider"><span>Partner already has their own code?</span></div>
+
+      <!-- Join instead -->
+      <div style="text-align:center;">
+        <p style="font-size:.9rem;color:var(--mid);margin-bottom:12px;">If your partner already has <em>their</em> code, enter it here instead:</p>
+        <a href="join.html" class="btn btn-primary btn-block">
+          💜 Enter My Partner's Code
+        </a>
+      </div>
+    </div>
+
+    <!-- Paired state (shown when partner joins) -->
+    <div id="pairedState" style="display:none;text-align:center;padding:12px 0;">
+      <div style="font-size:4rem;margin-bottom:12px;animation:float 2s ease-in-out infinite;">🎉</div>
+      <h2 style="font-family:'Playfair Display',serif;color:var(--dark);">You're paired!</h2>
+      <p style="color:var(--mid);margin:8px 0 20px;font-size:.95rem;" id="pairedNameMsg"></p>
+      <div style="width:100%;height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:16px;">
+        <div id="pairProgressBar" style="height:100%;background:var(--grad);width:0%;transition:width 1.5s ease;border-radius:2px;"></div>
+      </div>
+      <p style="font-size:.85rem;color:var(--muted);">Taking you to your dashboard…</p>
     </div>
 
   </div>
@@ -86,7 +86,117 @@
 <div id="toast" class="toast"></div>
 <script src="app.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', initPair);
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!App.requireUser()) return;
+    if (App.isPaired()) { window.location.href = 'dashboard.html'; return; }
+
+    const user = App.getUser();
+    document.querySelectorAll('.user-name').forEach(el => el.textContent = user.name);
+
+    // Generate / retrieve pair code
+    let pairData = App.getPair();
+    if (!pairData) {
+      const code = App.generateCode();
+      pairData = { code, createdAt: Date.now() };
+      App.save(App.KEYS.PAIR, pairData);
+      App.registerCode(pairData.code, user);
+    }
+
+    displayCode(pairData.code);
+    updateInviteLink(pairData.code, user);
+
+    // ─── Copy code button ──────────────────────────────────────────────────
+    document.getElementById('copyCodeBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(pairData.code).then(() => {
+        App.toast('Code copied! Share it with your partner 📋', '📋');
+      }).catch(() => {
+        App.toast('Your code: ' + pairData.code, '🔑');
+      });
+    });
+
+    // ─── Copy invite link button ──────────────────────────────────────────
+    document.getElementById('copyLinkBtn').addEventListener('click', () => {
+      const link = document.getElementById('inviteLinkInput').value;
+      navigator.clipboard.writeText(link).then(() => {
+        App.toast('Invite link copied! Send it to your partner 🎉', '🔗');
+      }).catch(() => {
+        App.toast('Copy the link from the text box!', '🔗');
+      });
+    });
+
+    // ─── Regen code button ────────────────────────────────────────────────
+    document.getElementById('regenBtn').addEventListener('click', () => {
+      App.removeCode(pairData.code);
+      const code = App.generateCode();
+      pairData = { code, createdAt: Date.now() };
+      App.save(App.KEYS.PAIR, pairData);
+      App.registerCode(code, user);
+      displayCode(code);
+      updateInviteLink(code, user);
+      App.toast('New code generated! Share the new link 🔄', '🔄');
+    });
+
+    // ─── BroadcastChannel: detect partner joining from same browser ────────
+    try {
+      const bc = new BroadcastChannel('ourapp_pair');
+      bc.onmessage = (evt) => {
+        if (evt.data && evt.data.type === 'PAIRED' && evt.data.code === pairData.code) {
+          handlePaired(evt.data.partner);
+        }
+      };
+    } catch(e) { /* not supported */ }
+
+    // ─── Poll localStorage for partner joining (cross-tab same browser) ───
+    const pollInterval = setInterval(() => {
+      const reg   = App.getCodeRegistry();
+      const entry = reg[pairData.code];
+      if (entry && entry.partner) {
+        clearInterval(pollInterval);
+        // Save partner to our localStorage
+        App.save(App.KEYS.PARTNER, entry.partner);
+        App.save(App.KEYS.JOINED, Date.now());
+        handlePaired(entry.partner);
+      }
+    }, 2000);
+
+    function handlePaired(partner) {
+      // Save if not already saved
+      if (!App.getPartner()) {
+        App.save(App.KEYS.PARTNER, partner);
+        App.save(App.KEYS.JOINED, Date.now());
+      }
+      document.getElementById('waitingState').style.display = 'none';
+      document.getElementById('pairedState').style.display = 'block';
+      document.getElementById('pairedNameMsg').textContent = `${partner.name} just joined! Welcome, ${user.name} & ${partner.name}! 💜`;
+      setTimeout(() => {
+        document.getElementById('pairProgressBar').style.width = '100%';
+      }, 100);
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 2200);
+    }
+  });
+
+  function displayCode(code) {
+    const container = document.getElementById('codeDisplay');
+    if (!container) return;
+    container.innerHTML = '';
+    code.split('').forEach((ch, i) => {
+      const d = document.createElement('div');
+      d.className = 'code-digit animate';
+      d.textContent = ch;
+      d.style.animationDelay = `${i * 80}ms`;
+      container.appendChild(d);
+    });
+  }
+
+  function updateInviteLink(code, user) {
+    // Build invite link with host data encoded in base64
+    const hostData = { ...user, pairCode: code };
+    const b64      = btoa(JSON.stringify(hostData));
+    const base     = window.location.origin + window.location.pathname.replace(/pair(\.html)?$/, 'join');
+    const link     = `${base}?invite=${b64}`;
+    const input    = document.getElementById('inviteLinkInput');
+    if (input) input.value = link;
+  }
 </script>
 </body>
 </html>
