@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile — OurApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>" />
+  <style>
+    .profile-avatar-picker {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin: 12px 0 20px;
+    }
+    .avatar-opt {
+      width: 44px; height: 44px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: all .15s;
+      background: var(--cream);
+    }
+    .avatar-opt:hover { border-color: var(--purple); transform: scale(1.1); }
+    .avatar-opt.selected { border-color: var(--purple); background: var(--grad-soft); box-shadow: 0 0 0 3px rgba(123,79,233,.15); }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-box .sv { font-size: 1.8rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-box .sl { font-size: .75rem; color: var(--muted); font-weight: 500; margin-top: 2px; }
+
+    .section-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+    .section-card h3 {
+      font-size: .875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .partner-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: var(--grad-soft);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+    .partner-emoji-big { font-size: 2.5rem; }
+    .partner-name { font-weight: 700; color: var(--dark); font-size: 1.05rem; }
+    .partner-since { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+
+    .danger-btn {
+      background: none;
+      border: 1.5px solid #f9a8a8;
+      color: #c0003f;
+      border-radius: 100px;
+      padding: 10px 20px;
+      font-size: .875rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: .2s;
+    }
+    .danger-btn:hover { background: #fff0f0; border-color: #e00; }
+
+    @media (max-width: 480px) {
+      .profile-avatar-picker { grid-template-columns: repeat(5, 1fr); }
+      .stat-row { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+<!-- NAV -->
+<nav class="auth-nav">
+  <a href="index.html" class="nav-logo">OurApp 💜</a>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <a href="dashboard.html" class="btn btn-outline btn-sm">← Dashboard</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="auth-main" style="align-items:flex-start;padding-top:40px;">
+  <div style="width:100%;max-width:560px;margin:0 auto;padding:0 16px;">
+
+    <!-- Profile Header -->
+    <div style="text-align:center;margin-bottom:32px;">
+      <div id="profileBigEmoji" style="font-size:5rem;margin-bottom:8px;line-height:1;"></div>
+      <h1 id="profileName" style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;color:var(--dark);"></h1>
+      <p id="profileEmail" style="font-size:.9rem;color:var(--muted);margin-top:4px;"></p>
+      <span id="profileBadge" style="display:inline-block;margin-top:8px;padding:4px 14px;border-radius:100px;font-size:.8rem;font-weight:700;"></span>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="sv" id="statStreak">0</div>
+        <div class="sl">🔥 Day Streak</div>
+      </div>
+      <div class="stat-box">
+        <div class="sv" id="statDays">0</div>
+        <div class="sl">📅 Days on OurApp</div>
+      </div>
+      <div class="stat-box">
+        <div class="sv" id="statAnswers">0</div>
+        <div class="sl">💬 Answers</div>
+      </div>
+    </div>
+
+    <!-- Partner card -->
+    <div class="section-card" id="partnerSection">
+      <h3>💜 Relationship</h3>
+      <div id="partnerContent"></div>
+    </div>
+
+    <!-- Edit Profile -->
+    <div class="section-card">
+      <h3>✏️ Edit Profile</h3>
+      <div id="editSuccess" class="alert alert-success" style="display:none;">✓ Profile updated!</div>
+      <div class="form-group">
+        <label for="editName">Your name</label>
+        <input type="text" id="editName" maxlength="30" placeholder="First name" />
+      </div>
+      <div class="form-group">
+        <label>Your emoji</label>
+        <div class="profile-avatar-picker" id="emojiPicker"></div>
+      </div>
+      <div class="form-group">
+        <label for="editEmail">Email address</label>
+        <input type="email" id="editEmail" placeholder="you@example.com" />
+      </div>
+      <button id="saveProfileBtn" class="btn btn-primary" style="width:100%;justify-content:center;">
+        💾 Save Changes
+      </button>
+    </div>
+
+    <!-- Account / Danger zone -->
+    <div class="section-card">
+      <h3>⚙️ Account</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);">
+          <div>
+            <div style="font-weight:600;font-size:.9rem;color:var(--dark);">Log Out</div>
+            <div style="font-size:.8rem;color:var(--muted);">Sign out and return to home page</div>
+          </div>
+          <button class="danger-btn" id="logoutBtn">Log Out</button>
+        </div>
+        <div id="unpairRow" style="display:none;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);">
+          <div>
+            <div style="font-weight:600;font-size:.9rem;color:var(--dark);">Unpair from Partner</div>
+            <div style="font-size:.8rem;color:var(--muted);">Remove your pairing — this cannot be undone</div>
+          </div>
+          <button class="danger-btn" id="unpairBtn">Unpair</button>
+        </div>
+        <div style="padding:12px 0;">
+          <div style="font-weight:600;font-size:.9rem;color:var(--dark);">Delete Account</div>
+          <div style="font-size:.8rem;color:var(--muted);margin-bottom:10px;">Permanently delete all your data from this device</div>
+          <button class="danger-btn" id="deleteBtn">Delete My Account</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="app.js"></script>
+<script src="firebase-db.js"></script>
+
+<script>
+  const EMOJIS = ['😊','🌸','🌙','⭐','🌊','🦋','🌺','🍀','🌈','🔥','💫','🎸','🏔️','🌻','🦁','🐺','🎨','🎵','✈️','🌮','☕','📚','🎮','🏋️','🌴','🦊','🐉','🌞','❄️','🍕','🦄','🐝'];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!App.requireUser()) return;
+
+    const user    = App.getUser();
+    const partner = App.getPartner();
+
+    // ─── Header ─────────────────────────────────────────────────────────────
+    document.getElementById('profileBigEmoji').textContent = user.emoji || '😊';
+    document.getElementById('profileName').textContent     = user.name  || 'Your Name';
+    document.getElementById('profileEmail').textContent    = user.email || '';
+
+    const badge = document.getElementById('profileBadge');
+    if (partner) {
+      badge.textContent = `💜 Paired with ${partner.name}`;
+      badge.style.cssText = 'background:var(--grad-soft);color:var(--purple);border:1px solid var(--border);';
+    } else {
+      badge.textContent = '🔗 Not paired yet';
+      badge.style.cssText = 'background:var(--cream);color:var(--muted);border:1px solid var(--border);';
+    }
+
+    // ─── Stats ───────────────────────────────────────────────────────────────
+    document.getElementById('statStreak').textContent  = App.getCurrentStreak();
+    document.getElementById('statDays').textContent    = App.getJoinedDays() || Math.floor((Date.now() - (App.load('ourapp_joined') || Date.now())) / 86400000) || 1;
+    document.getElementById('statAnswers').textContent = Object.keys(App.getAnswers()).length;
+
+    // ─── Partner section ─────────────────────────────────────────────────────
+    const pc = document.getElementById('partnerContent');
+    if (partner) {
+      document.getElementById('unpairRow').style.display = 'flex';
+      const days = App.getJoinedDays();
+      pc.innerHTML = `
+        <div class="partner-row">
+          <div class="partner-emoji-big">${partner.emoji || '💜'}</div>
+          <div>
+            <div class="partner-name">${partner.name}</div>
+            <div class="partner-since">💜 Paired together${days > 0 ? ' · ' + days + ' day' + (days !== 1 ? 's' : '') : ''}</div>
+          </div>
+          <div style="margin-left:auto;">
+            <a href="dashboard.html" class="btn btn-primary btn-sm">Go to Dashboard →</a>
+          </div>
+        </div>`;
+    } else {
+      pc.innerHTML = `
+        <div style="text-align:center;padding:16px;">
+          <div style="font-size:2.5rem;margin-bottom:10px;">💔</div>
+          <div style="font-weight:600;color:var(--dark);margin-bottom:8px;">Not paired with anyone yet</div>
+          <p style="font-size:.875rem;color:var(--muted);margin-bottom:16px;">Share your invite link with your partner to connect.</p>
+          <a href="pair.html" class="btn btn-primary">🔗 Get My Pairing Code</a>
+        </div>`;
+    }
+
+    // ─── Emoji picker ────────────────────────────────────────────────────────
+    let selectedEmoji = user.emoji || '😊';
+    const picker = document.getElementById('emojiPicker');
+    EMOJIS.forEach(e => {
+      const btn = document.createElement('button');
+      btn.className = 'avatar-opt' + (e === selectedEmoji ? ' selected' : '');
+      btn.textContent = e;
+      btn.type = 'button';
+      btn.addEventListener('click', () => {
+        picker.querySelectorAll('.avatar-opt').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedEmoji = e;
+        document.getElementById('profileBigEmoji').textContent = e;
+      });
+      picker.appendChild(btn);
+    });
+
+    // ─── Pre-fill edit form ──────────────────────────────────────────────────
+    document.getElementById('editName').value  = user.name  || '';
+    document.getElementById('editEmail').value = user.email || '';
+
+    // ─── Save profile ────────────────────────────────────────────────────────
+    document.getElementById('saveProfileBtn').addEventListener('click', () => {
+      const name  = document.getElementById('editName').value.trim();
+      const email = document.getElementById('editEmail').value.trim();
+      if (!name) { App.toast('Please enter your name', '⚠️'); return; }
+
+      const updated = { ...user, name, email, emoji: selectedEmoji };
+      App.saveUser(updated);
+
+      // Update profile header
+      document.getElementById('profileBigEmoji').textContent = selectedEmoji;
+      document.getElementById('profileName').textContent     = name;
+      document.getElementById('profileEmail').textContent    = email;
+
+      const suc = document.getElementById('editSuccess');
+      suc.style.display = 'flex';
+      setTimeout(() => suc.style.display = 'none', 3000);
+      App.toast('Profile updated! 💜');
+    });
+
+    // ─── Logout ──────────────────────────────────────────────────────────────
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      if (confirm('Log out? You\'ll need to sign up again on this device.')) App.logout();
+    });
+
+    // ─── Unpair ──────────────────────────────────────────────────────────────
+    document.getElementById('unpairBtn')?.addEventListener('click', () => {
+      if (confirm(`Unpair from ${partner?.name}? This cannot be undone.`)) {
+        localStorage.removeItem(App.KEYS.PARTNER);
+        localStorage.removeItem(App.KEYS.JOINED);
+        const pair = App.getPair();
+        if (pair) DB.removeCode(pair.code).catch(()=>{});
+        localStorage.removeItem(App.KEYS.PAIR);
+        App.toast('Unpairing complete. Go pair with someone new! 🔗', '🔗');
+        setTimeout(() => window.location.href = 'pair.html', 1500);
+      }
+    });
+
+    // ─── Delete account ──────────────────────────────────────────────────────
+    document.getElementById('deleteBtn').addEventListener('click', () => {
+      if (confirm('Delete your account? ALL your data on this device will be removed. This cannot be undone.')) {
+        const pair = App.getPair();
+        if (pair) DB.removeCode(pair.code).catch(()=>{});
+        App.clear();
+        window.location.href = 'index.html';
+      }
+    });
+  });
+</script>
+</body>
+</html>

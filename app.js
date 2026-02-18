@@ -389,7 +389,9 @@ function initDashboard() {
 
   // Names
   document.getElementById('coupleNames').textContent = `${user.name} & ${partner.name}`;
-  document.getElementById('userGreeting').textContent = `Hey, ${user.emoji || '💜'} ${user.name}!`;
+  document.getElementById('userGreeting').textContent = `Hey, ${user.name}!`;
+  const navAvatar = document.getElementById('navAvatar');
+  if (navAvatar) navAvatar.textContent = user.emoji || '😊';
 
   // Stats
   document.getElementById('streakCount').textContent  = App.getCurrentStreak();

@@ -98,10 +98,21 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
-    if (!App.requireUser()) return;
+    const user = App.getUser();
+
+    // Not logged in → show sign-up prompt instead of silent redirect
+    if (!user) {
+      document.getElementById('waitingState').innerHTML = `
+        <div class="auth-icon">🔐</div>
+        <h2>Sign up first!</h2>
+        <p class="auth-sub">You need an account before you can get a pairing code. It only takes 10 seconds!</p>
+        <a href="signup.html" class="btn btn-primary btn-block btn-lg" style="margin-top:8px;">Create My Profile 💜</a>
+        <div class="auth-link" style="margin-top:16px;">Already have an account? <a href="profile.html">View my profile →</a></div>`;
+      return;
+    }
+
     if (App.isPaired()) { window.location.href = 'dashboard.html'; return; }
 
-    const user = App.getUser();
     document.querySelectorAll('.user-name').forEach(el => el.textContent = user.name);
 
     // Show Firebase status badge

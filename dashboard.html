@@ -13,8 +13,13 @@
 <nav class="dash-nav">
   <div class="dash-nav-inner">
     <a href="index.html" class="nav-logo">OurApp 💜</a>
-    <div style="display:flex;align-items:center;gap:16px;">
-      <span id="userGreeting" style="font-size:.9rem;font-weight:600;color:var(--mid)"></span>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span id="userGreeting" style="font-size:.875rem;font-weight:600;color:var(--mid)"></span>
+      <a href="profile.html" id="profileAvatarBtn" title="My Profile"
+         style="width:38px;height:38px;border-radius:50%;background:var(--grad-soft);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.3rem;cursor:pointer;text-decoration:none;transition:.2s;"
+         onmouseover="this.style.borderColor='var(--purple)'" onmouseout="this.style.borderColor='var(--border)'">
+        <span id="navAvatar">😊</span>
+      </a>
       <button id="logoutBtn" class="btn btn-outline btn-sm">Log Out</button>
     </div>
   </div>
