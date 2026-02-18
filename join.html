@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join Your Partner — OurApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>" />
+</head>
+<body class="auth-page">
+
+<!-- NAV -->
+<nav class="auth-nav">
+  <a href="index.html" class="nav-logo">OurApp 💜</a>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <span style="font-size:.875rem;color:var(--muted)">Hi, <strong class="user-name" style="color:var(--dark)"></strong> 👋</span>
+    <a href="pair.html" class="btn btn-outline btn-sm">← My Code</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="auth-main">
+  <div class="auth-card" style="max-width:480px;">
+
+    <div class="auth-icon">💜</div>
+    <h2>Enter your partner's code</h2>
+    <p class="auth-sub">
+      Ask your partner to open OurApp and share their 6-character pairing code with you. Enter it below to connect!
+    </p>
+
+    <!-- Alert messages -->
+    <div id="joinError"   class="alert alert-error"   style="display:none;"></div>
+    <div id="joinSuccess" class="alert alert-success" style="display:none;"></div>
+
+    <!-- 6-box code input -->
+    <div class="code-input" id="codeInputArea" aria-label="Enter 6-character pairing code">
+      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 1" />
+      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 2" />
+      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 3" />
+      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 4" />
+      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 5" />
+      <input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="Digit 6" />
+    </div>
+
+    <p style="text-align:center;font-size:.8rem;color:var(--muted);margin-bottom:20px;">
+      Tip: You can also paste the full code at once 📋
+    </p>
+
+    <button id="joinBtn" class="btn btn-primary btn-block btn-lg">
+      💜 Connect with My Partner
+    </button>
+
+    <div class="auth-divider"><span>Don't have a code?</span></div>
+
+    <div style="text-align:center;">
+      <p style="font-size:.9rem;color:var(--mid);margin-bottom:12px;">
+        If your partner hasn't signed up yet, you can both start fresh — share your own code with them instead.
+      </p>
+      <a href="pair.html" class="btn btn-outline btn-block">
+        🔗 Share My Code Instead
+      </a>
+    </div>
+
+    <!-- Help section -->
+    <div style="margin-top:28px;padding:20px;background:var(--cream);border:1px solid var(--border);border-radius:14px;">
+      <p style="font-size:.875rem;font-weight:700;color:var(--dark);margin-bottom:10px;">❓ Where do I find the code?</p>
+      <p style="font-size:.85rem;color:var(--mid);line-height:1.65;">
+        Ask your partner to open OurApp → sign up → they'll see a 6-character code on their <strong>Pairing Code</strong> page. It looks like: <span style="font-family:'Playfair Display',serif;font-weight:800;color:var(--purple);letter-spacing:4px;">A3BK7P</span>
+      </p>
+    </div>
+
+    <!-- Animation for success state (hidden by default) -->
+    <div id="successAnimation" style="display:none;text-align:center;margin-top:20px;">
+      <div style="font-size:4rem;animation:float 2s ease-in-out infinite;">💜</div>
+      <p style="font-weight:700;color:var(--purple);margin-top:8px;">You're paired! Heading to your dashboard…</p>
+    </div>
+
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initJoin();
+    // Focus first input on load
+    document.querySelector('.code-input input')?.focus();
+  });
+</script>
+</body>
+</html>

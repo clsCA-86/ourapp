@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Profile — OurApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>" />
+</head>
+<body class="auth-page">
+
+<!-- NAV -->
+<nav class="auth-nav">
+  <a href="index.html" class="nav-logo">OurApp 💜</a>
+  <a href="index.html" class="btn btn-outline btn-sm">← Back Home</a>
+</nav>
+
+<!-- MAIN -->
+<main class="auth-main">
+  <div class="auth-card">
+
+    <div class="auth-icon">🌸</div>
+    <h2>Create your profile</h2>
+    <p class="auth-sub">Just a few details and you'll be ready to pair with your partner in seconds.</p>
+
+    <div id="signupError" class="alert alert-error" style="display:none"></div>
+
+    <form id="signupForm" novalidate>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Your first name</label>
+          <input type="text" id="name" name="name" placeholder="e.g. Alex" maxlength="30" autocomplete="given-name" required />
+        </div>
+        <div class="form-group">
+          <label for="emoji">Your emoji</label>
+          <select id="emoji" name="emoji">
+            <option value="😊">😊 Happy</option>
+            <option value="🌸">🌸 Blossom</option>
+            <option value="🌙">🌙 Moon</option>
+            <option value="⭐">⭐ Star</option>
+            <option value="🌊">🌊 Wave</option>
+            <option value="🦋">🦋 Butterfly</option>
+            <option value="🌺">🌺 Hibiscus</option>
+            <option value="🍀">🍀 Lucky</option>
+            <option value="🌈">🌈 Rainbow</option>
+            <option value="🔥">🔥 Fire</option>
+            <option value="💫">💫 Sparkle</option>
+            <option value="🎸">🎸 Guitar</option>
+            <option value="🏔️">🏔️ Mountain</option>
+            <option value="🌻">🌻 Sunflower</option>
+            <option value="🦁">🦁 Lion</option>
+            <option value="🐺">🐺 Wolf</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:.875rem;color:var(--mid);cursor:pointer;">
+          <input type="checkbox" id="terms" style="margin-top:3px;accent-color:var(--purple)" required />
+          <span>I agree to OurApp's <a href="#" style="color:var(--purple);font-weight:600;">Terms of Service</a> and <a href="#" style="color:var(--purple);font-weight:600;">Privacy Policy</a></span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
+        Create My Profile 💜
+      </button>
+    </form>
+
+    <div class="auth-divider"><span>OR</span></div>
+
+    <div class="auth-link">
+      Already have an account? <a href="pair.html">Go to your pairing code →</a>
+    </div>
+
+    <div style="margin-top:28px;padding:16px;background:var(--grad-soft);border-radius:12px;text-align:center;">
+      <p style="font-size:.85rem;color:var(--mid);line-height:1.6;">
+        🔒 <strong>100% Private.</strong> Your data is stored only on your device. We never sell or share your personal information.
+      </p>
+    </div>
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initSignup();
+
+    // Live emoji preview in form
+    const emojiSel = document.getElementById('emoji');
+    const icon     = document.querySelector('.auth-icon');
+    emojiSel?.addEventListener('change', () => { icon.textContent = emojiSel.value; });
+
+    // Terms checkbox validation
+    const form = document.getElementById('signupForm');
+    form?.addEventListener('submit', e => {
+      const terms = document.getElementById('terms');
+      if (!terms.checked) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const err = document.getElementById('signupError');
+        err.textContent = '❌ Please agree to the Terms of Service to continue.';
+        err.style.display = 'flex';
+      }
+    });
+  });
+</script>
+</body>
+</html>

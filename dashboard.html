@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Dashboard — OurApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>" />
+</head>
+<body class="dashboard-page">
+
+<!-- ===== DASHBOARD NAV ===== -->
+<nav class="dash-nav">
+  <div class="dash-nav-inner">
+    <a href="index.html" class="nav-logo">OurApp 💜</a>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <span id="userGreeting" style="font-size:.9rem;font-weight:600;color:var(--mid)"></span>
+      <button id="logoutBtn" class="btn btn-outline btn-sm">Log Out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== DASHBOARD MAIN ===== -->
+<main class="dash-main">
+
+  <!-- Couple header banner -->
+  <div class="couple-header">
+    <div class="couple-names" id="coupleNames">You & Your Partner</div>
+    <div class="couple-since">💜 Growing closer together, every day</div>
+    <div class="couple-stats-row">
+      <div class="couple-stat">
+        <span class="csnum" id="streakCount">0</span>
+        <span class="cslbl">🔥 Streak</span>
+      </div>
+      <div class="couple-stat">
+        <span class="csnum" id="daysCount">0</span>
+        <span class="cslbl">📅 Days together</span>
+      </div>
+      <div class="couple-stat">
+        <span class="csnum" id="answersCount">0</span>
+        <span class="cslbl">💬 Answered</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="dash-grid">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- Daily Question Card -->
+      <div class="dash-card">
+        <h3>
+          <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">✨</span>
+          Today's Question
+          <span style="margin-left:auto;font-size:.75rem;font-weight:500;color:var(--muted);background:var(--grad-soft);padding:4px 10px;border-radius:100px;">Daily</span>
+        </h3>
+
+        <div class="daily-q" id="dailyQuestion">
+          Loading today's question…
+        </div>
+
+        <div id="savedMsg" class="alert alert-success" style="display:none;">
+          ✓ Your answer has been saved for today! Come back tomorrow for a new question.
+        </div>
+
+        <textarea
+          id="answerArea"
+          class="answer-area"
+          placeholder="Write your answer here… share as much or as little as you like 💜"
+          rows="4"
+        ></textarea>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <span style="font-size:.8rem;color:var(--muted);">Your answer is private until you choose to share it with your partner.</span>
+          <button id="saveAnswerBtn" class="btn btn-primary btn-sm" style="white-space:nowrap;">
+            Save Answer 💜
+          </button>
+        </div>
+      </div>
+
+      <!-- Streak Calendar Card -->
+      <div class="dash-card">
+        <h3>
+          🔥 Your Streak Calendar
+          <span style="margin-left:auto;font-size:.75rem;font-weight:500;color:var(--muted);">Last 21 days</span>
+        </h3>
+        <div id="streakCalendar" class="streak-row"></div>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:14px;">
+          <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--mid);">
+            <div style="width:16px;height:16px;background:var(--grad);border-radius:4px;"></div> Answered
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--mid);">
+            <div style="width:16px;height:16px;background:var(--border);border-radius:4px;"></div> Missed
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--mid);">
+            <div style="width:16px;height:16px;border:2px solid var(--purple);border-radius:4px;"></div> Today
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Activities Card -->
+      <div class="dash-card">
+        <h3>🎮 Quick Activities</h3>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;">
+          <div class="activity-btn" onclick="showActivity('quiz')" style="background:var(--grad-soft);border-radius:14px;padding:20px;text-align:center;cursor:pointer;border:1px solid var(--border);transition:transform .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:2rem;margin-bottom:8px;">❓</div>
+            <div style="font-weight:700;font-size:.95rem;color:var(--dark);">Couples Quiz</div>
+            <div style="font-size:.8rem;color:var(--muted);margin-top:4px;">How well do you know each other?</div>
+          </div>
+          <div class="activity-btn" onclick="showActivity('love')" style="background:var(--grad-soft);border-radius:14px;padding:20px;text-align:center;cursor:pointer;border:1px solid var(--border);transition:transform .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:2rem;margin-bottom:8px;">💜</div>
+            <div style="font-weight:700;font-size:.95rem;color:var(--dark);">Love Language</div>
+            <div style="font-size:.8rem;color:var(--muted);margin-top:4px;">Discover how you love</div>
+          </div>
+          <div class="activity-btn" onclick="showActivity('date')" style="background:var(--grad-soft);border-radius:14px;padding:20px;text-align:center;cursor:pointer;border:1px solid var(--border);transition:transform .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:2rem;margin-bottom:8px;">🗓️</div>
+            <div style="font-weight:700;font-size:.95rem;color:var(--dark);">Date Night</div>
+            <div style="font-size:.8rem;color:var(--muted);margin-top:4px;">Find your perfect date idea</div>
+          </div>
+          <div class="activity-btn" onclick="showActivity('game')" style="background:var(--grad-soft);border-radius:14px;padding:20px;text-align:center;cursor:pointer;border:1px solid var(--border);transition:transform .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:2rem;margin-bottom:8px;">🎮</div>
+            <div style="font-weight:700;font-size:.95rem;color:var(--dark);">Mini Game</div>
+            <div style="font-size:.8rem;color:var(--muted);margin-top:4px;">Play together &amp; laugh</div>
+          </div>
+        </div>
+
+        <!-- Activity content area -->
+        <div id="activityArea" style="display:none;margin-top:20px;padding:20px;background:var(--cream);border-radius:14px;border:1px solid var(--border);">
+          <div id="activityContent"></div>
+        </div>
+      </div>
+
+    </div><!-- end left column -->
+
+    <!-- RIGHT COLUMN -->
+    <div>
+
+      <!-- Partner Card -->
+      <div class="dash-card">
+        <h3>💜 Your Partner</h3>
+        <div style="text-align:center;padding:8px 0;">
+          <div id="partnerEmoji" style="font-size:3.5rem;margin-bottom:10px;">💜</div>
+          <div id="partnerName" style="font-size:1.2rem;font-weight:800;color:var(--dark);margin-bottom:6px;"></div>
+          <div style="font-size:.85rem;color:var(--muted);">Your partner on OurApp</div>
+        </div>
+        <div style="margin-top:16px;padding:14px;background:var(--grad-soft);border-radius:12px;text-align:center;">
+          <div style="font-size:.8rem;font-weight:600;color:var(--purple);">💌 Tip of the day</div>
+          <p id="loveTip" style="font-size:.85rem;color:var(--mid);margin-top:6px;line-height:1.6;"></p>
+        </div>
+      </div>
+
+      <!-- Milestones Card -->
+      <div class="dash-card">
+        <h3>🏆 Milestones</h3>
+        <div class="milestone-list" id="milestoneList">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Upcoming dates Card -->
+      <div class="dash-card">
+        <h3>📅 Date Ideas</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;" id="dateIdeas">
+          <!-- populated by JS -->
+        </div>
+        <button onclick="shuffleDates()" class="btn btn-outline btn-sm btn-block" style="margin-top:14px;">🔀 Shuffle Ideas</button>
+      </div>
+
+      <!-- Premium upgrade card -->
+      <div class="dash-card" style="background:var(--grad);border:none;">
+        <div style="color:white;">
+          <div style="font-size:1.4rem;margin-bottom:8px;">✨</div>
+          <h3 style="color:white;margin-bottom:8px;">Unlock Premium</h3>
+          <p style="font-size:.875rem;opacity:.85;line-height:1.6;margin-bottom:16px;">Get unlimited questions, 30+ games, date ideas and relationship insights.</p>
+          <a href="index.html#pricing" class="btn btn-white btn-sm btn-block" style="text-align:center;justify-content:center;">Upgrade for $9/mo</a>
+        </div>
+      </div>
+
+    </div><!-- end right column -->
+
+  </div><!-- end dash-grid -->
+
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+<script>
+  // ── Love tips ──────────────────────────────────────────────
+  const LOVE_TIPS = [
+    "Send an unexpected 'I love you' text today. Small gestures matter most.",
+    "Ask your partner about their dream for this year — you might be surprised.",
+    "Put your phone down for 30 minutes tonight and just talk.",
+    "Share one thing you're grateful for about your partner right now.",
+    "Plan a surprise, no matter how small. Intentionality is everything.",
+    "Hold hands while watching TV tonight — physical touch says everything.",
+    "Tell your partner one specific thing they did this week that you loved.",
+    "Write a note and leave it somewhere they'll find it unexpectedly.",
+    "Ask 'What can I do to make your day easier?' and then do it.",
+    "Share a happy memory from your relationship and why it means so much.",
+  ];
+
+  // ── Date ideas ─────────────────────────────────────────────
+  const DATE_IDEAS = [
+    { icon: '🍕', title: 'Pizza & movie night', type: 'Home' },
+    { icon: '🌄', title: 'Sunrise hike together', type: 'Outdoors' },
+    { icon: '🎨', title: 'Paint & sip class', type: 'Creative' },
+    { icon: '🌮', title: 'Cook a new recipe together', type: 'Home' },
+    { icon: '⭐', title: 'Stargazing picnic', type: 'Outdoors' },
+    { icon: '🎳', title: 'Retro bowling night', type: 'Out' },
+    { icon: '📚', title: 'Bookstore date & coffee', type: 'Out' },
+    { icon: '🎡', title: 'Amusement park adventure', type: 'Out' },
+    { icon: '🧁', title: 'Bake something sweet together', type: 'Home' },
+    { icon: '🌊', title: 'Day trip to the beach', type: 'Outdoors' },
+    { icon: '🎭', title: 'Live theatre show', type: 'Out' },
+    { icon: '🧩', title: 'Puzzle & hot chocolate', type: 'Home' },
+  ];
+
+  // ── Milestones ─────────────────────────────────────────────
+  const MILESTONES = [
+    { icon: '🔗', title: 'Paired up!', date: 'Day 1' },
+    { icon: '🔥', title: 'First 7-day streak', date: 'Day 7' },
+    { icon: '💬', title: 'Answered 10 questions', date: '10 answers' },
+    { icon: '🏆', title: '30-day streak', date: 'Day 30' },
+    { icon: '💜', title: '1 month together on OurApp', date: 'Day 30' },
+    { icon: '🌟', title: 'Love Language discovered', date: 'Unlock Premium' },
+  ];
+
+  // ── Activities ─────────────────────────────────────────────
+  const QUIZ_QUESTIONS = [
+    { q: "What's my go-to comfort food?", opts: ["🍕 Pizza", "🍜 Noodles", "🍦 Ice cream", "🥗 Salad"] },
+    { q: "What do I consider my best quality?", opts: ["💪 Determination", "😂 Humor", "💜 Kindness", "🧠 Intelligence"] },
+    { q: "Where would I most love to travel?", opts: ["🏔️ Mountains", "🏖️ Beach", "🌆 City", "🌿 Countryside"] },
+    { q: "What's my ideal weekend?", opts: ["🏠 Cozy at home", "🏕️ Outdoor adventure", "🎉 Socializing", "✈️ Traveling"] },
+  ];
+
+  let currentQuiz = 0;
+  let quizScore   = 0;
+
+  function showActivity(type) {
+    const area    = document.getElementById('activityArea');
+    const content = document.getElementById('activityContent');
+    area.style.display = 'block';
+    area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    if (type === 'quiz') {
+      currentQuiz = 0; quizScore = 0;
+      renderQuizQuestion(content);
+    } else if (type === 'love') {
+      content.innerHTML = `
+        <h4 style="margin-bottom:12px;color:var(--dark);">💜 The 5 Love Languages</h4>
+        <p style="font-size:.9rem;color:var(--mid);margin-bottom:14px;">Which best describes how you feel most loved?</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${[['🗣️','Words of Affirmation','Compliments, words of love and encouragement'],
+             ['⏱️','Quality Time','Undivided attention and being present'],
+             ['🎁','Receiving Gifts','Thoughtful gestures and meaningful presents'],
+             ['🤝','Acts of Service','Actions that say "I care about you"'],
+             ['🤗','Physical Touch','Hugs, holding hands, closeness']]
+            .map(([e,t,d]) => `<div onclick="selectLoveLanguage('${t}')" style="padding:12px 16px;background:var(--white);border-radius:10px;cursor:pointer;border:2px solid var(--border);transition:.2s;" onmouseover="this.style.borderColor='var(--purple)'" onmouseout="this.style.borderColor='var(--border)'">
+              <span style="font-size:1.2rem;">${e}</span> <strong style="color:var(--dark);">${t}</strong>
+              <p style="font-size:.8rem;color:var(--muted);margin:4px 0 0;">${d}</p>
+            </div>`).join('')}
+        </div>`;
+    } else if (type === 'date') {
+      const random = DATE_IDEAS.sort(() => .5 - Math.random()).slice(0, 3);
+      content.innerHTML = `
+        <h4 style="margin-bottom:12px;color:var(--dark);">🗓️ Date Night Picks</h4>
+        <p style="font-size:.9rem;color:var(--mid);margin-bottom:14px;">Three random date ideas just for you two:</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          ${random.map(d => `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--white);border-radius:10px;border:1px solid var(--border);">
+            <span style="font-size:1.5rem;">${d.icon}</span>
+            <div><div style="font-weight:700;color:var(--dark);">${d.title}</div><div style="font-size:.8rem;color:var(--muted);">${d.type}</div></div>
+          </div>`).join('')}
+        </div>
+        <button onclick="showActivity('date')" class="btn btn-outline btn-sm" style="margin-top:12px;width:100%;justify-content:center;">🔀 Shuffle Again</button>`;
+    } else if (type === 'game') {
+      content.innerHTML = `
+        <h4 style="margin-bottom:12px;color:var(--dark);">🎮 Would You Rather?</h4>
+        <p style="font-size:.9rem;color:var(--mid);margin-bottom:14px;">Pick one — then see if your partner agrees!</p>
+        <div id="wyrGame">${renderWYR()}</div>`;
+    }
+  }
+
+  function renderQuizQuestion(container) {
+    if (currentQuiz >= QUIZ_QUESTIONS.length) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:12px;">
+          <div style="font-size:3rem;margin-bottom:12px;">🏆</div>
+          <h4 style="color:var(--dark);">Quiz complete!</h4>
+          <p style="color:var(--mid);margin:8px 0 16px;">Your partner will love seeing your answers 💜</p>
+          <button onclick="currentQuiz=0;quizScore=0;renderQuizQuestion(document.getElementById('activityContent'))" class="btn btn-primary btn-sm">Play Again 🔄</button>
+        </div>`;
+      return;
+    }
+    const q = QUIZ_QUESTIONS[currentQuiz];
+    container.innerHTML = `
+      <div>
+        <div style="font-size:.8rem;color:var(--muted);margin-bottom:8px;">Question ${currentQuiz + 1} of ${QUIZ_QUESTIONS.length}</div>
+        <h4 style="color:var(--dark);margin-bottom:16px;">${q.q}</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          ${q.opts.map(o => `<button onclick="answerQuiz()" style="padding:12px;background:var(--white);border:2px solid var(--border);border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--dark);transition:.15s;font-family:inherit;" onmouseover="this.style.borderColor='var(--purple)';this.style.background='var(--grad-soft)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--white)'">${o}</button>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  function answerQuiz() {
+    currentQuiz++;
+    renderQuizQuestion(document.getElementById('activityContent'));
+    App.toast('Answer recorded! 💜', '💜', 1500);
+  }
+
+  function selectLoveLanguage(lang) {
+    App.toast(`Your love language: ${lang} 💜`, '💜', 4000);
+    document.getElementById('activityContent').innerHTML = `
+      <div style="text-align:center;padding:12px;">
+        <div style="font-size:3rem;margin-bottom:12px;">💜</div>
+        <h4 style="color:var(--dark);">Your love language is:</h4>
+        <div style="margin:12px 0;font-size:1.2rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${lang}</div>
+        <p style="font-size:.9rem;color:var(--mid);margin-bottom:16px;">Share this with your partner so they know how to love you best! 💜</p>
+        <button onclick="showActivity('love')" class="btn btn-outline btn-sm">Retake Quiz</button>
+      </div>`;
+  }
+
+  const WYR_PAIRS = [
+    ["🏖️ Always live at the beach", "🏔️ Always live in the mountains"],
+    ["🌅 See every sunrise together", "🌌 Stay up for every meteor shower"],
+    ["🍕 Eat your favourite food every day", "🌍 Try a new cuisine every day"],
+    ["🎵 Only listen to one song forever", "📺 Only watch one movie forever"],
+    ["✈️ Travel to 10 new places a year", "🏡 Make your home your dream space"],
+    ["📖 Know the ending before every story", "🎲 Be surprised every single time"],
+  ];
+  let wyrIdx = 0;
+  function renderWYR() {
+    const pair = WYR_PAIRS[wyrIdx % WYR_PAIRS.length];
+    return `<div style="display:flex;flex-direction:column;gap:10px;">
+      ${pair.map(p => `<button onclick="pickWYR(this)" style="padding:16px;background:var(--white);border:2px solid var(--border);border-radius:12px;cursor:pointer;font-size:.95rem;font-weight:600;color:var(--dark);transition:.15s;font-family:inherit;text-align:left;" onmouseover="this.style.borderColor='var(--purple)'" onmouseout="this.style.borderColor='var(--border)'">${p}</button>`).join('')}
+    </div>`;
+  }
+  function pickWYR(btn) {
+    App.toast(`You chose: ${btn.textContent.trim()} 🎉`, '🎮', 2500);
+    wyrIdx++;
+    setTimeout(() => { document.getElementById('wyrGame').innerHTML = renderWYR(); }, 800);
+  }
+
+  // ── Init page ──────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    initDashboard();
+
+    // Love tip (random daily)
+    const tipEl = document.getElementById('loveTip');
+    if (tipEl) tipEl.textContent = LOVE_TIPS[Math.floor(Date.now() / 86400000) % LOVE_TIPS.length];
+
+    // Milestones
+    const ml = document.getElementById('milestoneList');
+    if (ml) {
+      ml.innerHTML = MILESTONES.map(m => `
+        <div class="milestone">
+          <div class="milestone-icon">${m.icon}</div>
+          <div class="milestone-info">
+            <div class="m-title">${m.title}</div>
+            <div class="m-date">${m.date}</div>
+          </div>
+        </div>`).join('');
+    }
+
+    // Date ideas sidebar
+    shuffleDates();
+  });
+
+  function shuffleDates() {
+    const el = document.getElementById('dateIdeas');
+    if (!el) return;
+    const picks = DATE_IDEAS.sort(() => .5 - Math.random()).slice(0, 4);
+    el.innerHTML = picks.map(d => `
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--cream);border-radius:10px;border:1px solid var(--border);">
+        <span style="font-size:1.3rem;">${d.icon}</span>
+        <div>
+          <div style="font-weight:600;font-size:.9rem;color:var(--dark);">${d.title}</div>
+          <div style="font-size:.78rem;color:var(--muted);">${d.type}</div>
+        </div>
+      </div>`).join('');
+  }
+</script>
+</body>
+</html>

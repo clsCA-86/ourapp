@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Pairing Code — OurApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>" />
+</head>
+<body class="auth-page">
+
+<!-- NAV -->
+<nav class="auth-nav">
+  <a href="index.html" class="nav-logo">OurApp 💜</a>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <span style="font-size:.875rem;color:var(--muted)">Logged in as <strong class="user-name" style="color:var(--dark)"></strong></span>
+    <button onclick="App.logout()" class="btn btn-outline btn-sm">Log Out</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="auth-main">
+  <div class="auth-card" style="max-width:500px;">
+
+    <div class="auth-icon" id="pairIcon">🔗</div>
+    <h2>Your pairing code</h2>
+    <p class="auth-sub">
+      Share this code with your partner so they can join you on OurApp. Waiting for them to connect…
+    </p>
+
+    <!-- Animated code display -->
+    <div id="codeDisplay" class="code-display" aria-label="Pairing code"></div>
+
+    <!-- Copy / Share actions -->
+    <div class="code-actions">
+      <button id="copyBtn" class="btn btn-outline btn-sm">📋 Copy Code</button>
+      <button id="shareBtn" class="btn btn-outline btn-sm">📤 Share</button>
+      <button id="regenBtn" class="btn btn-sm" style="background:var(--grad-soft);color:var(--purple);border:1px solid var(--border);">🔄 New Code</button>
+    </div>
+
+    <!-- Waiting indicator -->
+    <div style="text-align:center;margin-bottom:24px;" id="waitingArea">
+      <div style="display:inline-flex;align-items:center;gap:10px;background:var(--grad-soft);border:1px solid var(--border);border-radius:100px;padding:10px 20px;font-size:.9rem;color:var(--purple);font-weight:600;">
+        <span class="dot" style="background:var(--purple)"></span>
+        Waiting for your partner to join…
+      </div>
+      <p style="font-size:.8rem;color:var(--muted);margin-top:12px;">This page will automatically update when they connect 🎉</p>
+    </div>
+
+    <div class="auth-divider"><span>Partner already has a code?</span></div>
+
+    <!-- Join instead -->
+    <div style="text-align:center;">
+      <p style="font-size:.9rem;color:var(--mid);margin-bottom:12px;">If your partner already shared <em>their</em> code with you, enter it here instead:</p>
+      <a href="join.html" class="btn btn-primary btn-block">
+        💜 Enter My Partner's Code
+      </a>
+    </div>
+
+    <!-- Steps hint -->
+    <div style="margin-top:28px;padding:20px;background:var(--cream);border:1px solid var(--border);border-radius:14px;">
+      <p style="font-size:.85rem;font-weight:700;color:var(--dark);margin-bottom:12px;">How to pair:</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--mid);">
+          <span style="width:22px;height:22px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:800;flex-shrink:0;">1</span>
+          Copy or screenshot your code above
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--mid);">
+          <span style="width:22px;height:22px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:800;flex-shrink:0;">2</span>
+          Send it to your partner via message or any app
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--mid);">
+          <span style="width:22px;height:22px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:800;flex-shrink:0;">3</span>
+          They sign up on OurApp and enter your code on the Join page
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--mid);">
+          <span style="width:22px;height:22px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:800;flex-shrink:0;">4</span>
+          This page updates automatically — you're paired! 💜
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', initPair);
+</script>
+</body>
+</html>

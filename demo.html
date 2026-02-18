@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>OurApp Demo Setup</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+<main class="auth-main">
+  <div class="auth-card" style="max-width:400px;text-align:center;">
+    <div class="auth-icon">🚀</div>
+    <h2 style="font-family:'Playfair Display',serif;">Demo Mode</h2>
+    <p class="auth-sub">Setting up a demo couple to preview the dashboard…</p>
+    <div class="auth-icon" style="font-size:2rem;margin:16px auto;">⏳</div>
+  </div>
+</main>
+<script>
+  // Inject a fake paired state into localStorage for demo purposes
+  const user    = { name: 'Alex',   emoji: '🌸', email: 'alex@example.com',   id: 'demo1' };
+  const partner = { name: 'Jordan', emoji: '🌊', email: 'jordan@example.com', id: 'demo2' };
+
+  localStorage.setItem('ourapp_user',    JSON.stringify(user));
+  localStorage.setItem('ourapp_partner', JSON.stringify(partner));
+  localStorage.setItem('ourapp_joined',  JSON.stringify(Date.now() - 7 * 86400000)); // joined 7 days ago
+  localStorage.setItem('ourapp_pair',    JSON.stringify({ code: 'DEMO01', createdAt: Date.now() }));
+
+  // Simulate a 5-day streak
+  const streak = [];
+  for (let i = 5; i >= 1; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    streak.push(d.toDateString());
+  }
+  // Add today
+  streak.push(new Date().toDateString());
+  localStorage.setItem('ourapp_streak',  JSON.stringify(streak));
+
+  // Add some past answers
+  const answers = {};
+  for (let i = 5; i >= 1; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    answers[d.toDateString()] = { text: 'Sample answer ' + i, ts: d.getTime() };
+  }
+  localStorage.setItem('ourapp_answers', JSON.stringify(answers));
+
+  // Redirect to dashboard
+  setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+</script>
+</body>
+</html>
