@@ -120,20 +120,20 @@
       badge.style.display = 'inline-flex';
     }
 
-    // Generate / retrieve pair code
+    // Generate / retrieve pair code — SYNC so code shows immediately
     let pairData = App.getPair();
     if (!pairData) {
       const code = App.generateCode();
       pairData = { code, createdAt: Date.now() };
       App.save(App.KEYS.PAIR, pairData);
-      await DB.registerCode(code, user);
-    } else {
-      // Re-register in case Firebase lost it (e.g. page refresh)
-      await DB.registerCode(pairData.code, user);
     }
 
+    // Show code and invite link immediately (never blocked by async)
     displayCode(pairData.code);
     updateInviteLink(pairData.code, user);
+
+    // Register to Firebase in background (non-blocking)
+    DB.registerCode(pairData.code, user).catch(e => console.warn('[OurApp] registerCode:', e));
 
     // ─── Copy code ──────────────────────────────────────────────────────────
     document.getElementById('copyCodeBtn').addEventListener('click', () => {
@@ -209,12 +209,18 @@
   }
 
   function updateInviteLink(code, user) {
-    const hostData = { ...user, pairCode: code };
-    const b64      = btoa(unescape(encodeURIComponent(JSON.stringify(hostData))));
-    const base     = window.location.origin + window.location.pathname.replace(/pair(\.html)?(\?.*)?$/, 'join');
-    const link     = `${base}?invite=${b64}`;
-    const input    = document.getElementById('inviteLinkInput');
-    if (input) input.value = link;
+    try {
+      const hostData = { ...user, pairCode: code };
+      const b64  = btoa(unescape(encodeURIComponent(JSON.stringify(hostData))));
+      // Build join URL — use join.html so it works on GitHub Pages
+      const path = window.location.pathname.replace(/pair(\.html)?(\?.*)?$/, '');
+      const base = window.location.origin + path + 'join.html';
+      const link = `${base}?invite=${b64}`;
+      const input = document.getElementById('inviteLinkInput');
+      if (input) input.value = link;
+    } catch(e) {
+      console.warn('[OurApp] updateInviteLink error:', e);
+    }
   }
 </script>
 </body>
