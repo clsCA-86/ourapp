@@ -10,15 +10,16 @@
  * ─────────────────────────────────────────────────────────────
  * PASTE YOUR CONFIG HERE ↓
  */
-const FIREBASE_CONFIG = {
-  apiKey:            "PASTE_YOUR_API_KEY",
-  authDomain:        "PASTE_YOUR_PROJECT.firebaseapp.com",
-  databaseURL:       "PASTE_YOUR_DATABASE_URL",   // ends with .firebaseio.com
-  projectId:         "PASTE_YOUR_PROJECT_ID",
-  storageBucket:     "PASTE_YOUR_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId:             "PASTE_YOUR_APP_ID"
+const firebaseConfig = {
+apiKey: "AIzaSyD0VEa5FF3ascfkZV0TbwcsWkjbg3KEWfc",
+authDomain: "ourapp-45560.firebaseapp.com",
+databaseURL: "https://ourapp-45560-default-rtdb.firebaseio.com",
+projectId: "ourapp-45560",
+storageBucket: "ourapp-45560.firebasestorage.app",
+messagingSenderId: "1010290192045",
+appId: "1:1010290192045:web:f30a517144dcdf8daf6024"
 };
+
 
 // ─── DO NOT EDIT BELOW ───────────────────────────────────────
 // Detect if config is filled in
